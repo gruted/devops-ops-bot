@@ -1,0 +1,9 @@
+# DevOps Ops Bot MVP
+# Install with: crontab deploy/cron/devops-ops-bot.cron
+# Times are UTC on this host unless crond configured otherwise.
+
+# Weekly audit every Friday at 02:05 UTC
+5 2 * * 5 cd /home/gru/.openclaw/workspace && /home/gru/.openclaw/workspace/scripts/weekly_audit.sh --out /home/gru/.openclaw/workspace/notes/audit-weekly.md
+
+# Weekly GitHub bug scan every Friday at 02:10 UTC
+10 2 * * 5 cd /home/gru/.openclaw/workspace && /home/gru/.openclaw/workspace/scripts/gh_bug_report.sh gruted > /home/gru/.openclaw/workspace/notes/gh-bugs.md
