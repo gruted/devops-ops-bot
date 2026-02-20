@@ -51,6 +51,11 @@ $(docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Image}}' 2>&1 || echo 'd
 $(systemctl --no-pager --failed 2>&1 || echo 'systemctl: not available')
 \`\`\`
 
+### OpenClaw nodes status
+\`\`\`
+$(openclaw nodes status 2>&1 || echo 'openclaw: not available')
+\`\`\`
+
 ### nginx status (if present)
 \`\`\`
 $(systemctl --no-pager status nginx.service -l 2>&1 || true)

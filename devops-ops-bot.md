@@ -47,8 +47,8 @@ Example entries (UTC):
 # Weekly audit every Friday at 02:05 UTC
 5 2 * * 5 cd /home/gru/.openclaw/workspace && /home/gru/.openclaw/workspace/scripts/weekly_audit.sh --out /home/gru/.openclaw/workspace/notes/audit-weekly.md
 
-# Weekly GitHub bug scan every Friday at 02:10 UTC
-10 2 * * 5 cd /home/gru/.openclaw/workspace && /home/gru/.openclaw/workspace/scripts/gh_bug_report.sh gruted > /home/gru/.openclaw/workspace/notes/gh-bugs.md
+# Daily GitHub bug scan at 02:10 UTC
+10 2 * * * cd /home/gru/.openclaw/workspace && /home/gru/.openclaw/workspace/scripts/gh_bug_report.sh gruted > /home/gru/.openclaw/workspace/notes/gh-bugs.md
 ```
 
 If you want a single "dashboard refresh" script, add a wrapper script that runs both and then updates `notes/devops-bot-status.md`.
