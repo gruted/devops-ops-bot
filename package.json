@@ -1,0 +1,33 @@
+{
+  "name": "devops-ops-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib"
+  },
+  "bin": {
+    "devops-watch": "bin/devops-watch.js"
+  },
+  "scripts": {
+    "check": "node bin/devops-watch.js check",
+    "cron-example": "node bin/devops-watch.js cron-example"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gruted/devops-ops-bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/gruted/devops-ops-bot/issues"
+  },
+  "homepage": "https://github.com/gruted/devops-ops-bot#readme",
+  "dependencies": {
+    "commander": "^14.0.3",
+    "systeminformation": "^5.31.1"
+  }
+}
