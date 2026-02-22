@@ -1,25 +1,13 @@
 name: CI
-
 on: [push, pull_request]
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Node
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-      - name: Install
-        run: npm ci || true
-      - name: Run lint
-        run: |
-          if [ -f package.json ]; then
-            npm run lint || true
-          fi
-      - name: Run tests
-        run: |
-          if [ -f package.json ]; then
-            npm test || true
-          fi
+      - run: npm ci
+      - run: npm test
