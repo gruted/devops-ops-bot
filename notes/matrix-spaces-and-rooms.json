@@ -1,0 +1,22 @@
+{
+  "homeserver": "https://matrix.gruted.us.com",
+  "ted": "@ted:matrix.gruted.us.com",
+  "spaces": {
+    "OpenClaw Ops": {
+      "spaceId": "!IbZNS_ldxU2N359FdQ0sijQ4EXR-J1v7_KFOBDoJkSY",
+      "rooms": {
+        "ops-announcements": "!jyExLOO7fCQXRVxiK_DkkgJur5cQ4aZL6hMzU2HfE5E",
+        "ops-workshop": "!S76anXXvNtfS4eVpvteuc3lysytaKetFc5zv2xvt8e8",
+        "ops-alerts": "!VqJP9x-_B2t0Ki6Gmr6oiUVTctV4becZ3iiGkXY_GeI"
+      }
+    },
+    "Money / Biz Dev": {
+      "spaceId": "!PIxZ7in0cXRdESLCynzJCsHQ8o_QvRZzZzJMTJG-cto",
+      "rooms": {
+        "ideas": "!AG1bdYrcZMryG70amP5UO0s1JZE3YNAuG4vJ7JzP8IM",
+        "research": "!7nZAA68OzNoGF9NLQaJeYPJBldgXb6va7lC_rIv_MwA",
+        "pipeline": "!woGGQNZYcLLfA2NVrSsWrCb3RXzxC6Zjl1jnJ1oWKoU"
+      }
+    }
+  }
+}

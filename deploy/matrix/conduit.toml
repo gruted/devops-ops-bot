@@ -1,0 +1,38 @@
+# Conduit configuration template (NON-SECRET)
+#
+# IMPORTANT:
+# - Do not commit secrets into this file.
+# - Replace ${...} placeholders at deploy time using values from Bitwarden.
+#
+# Conduit config reference:
+# https://gitlab.com/famedly/conduit/-/raw/master/docs/configuration.md
+
+[global]
+# Primary server identity (this determines your MXIDs like @alice:${CONDUIT_SERVER_NAME})
+server_name = "${CONDUIT_SERVER_NAME}"  # e.g. "matrix.gruted.us.com"
+
+# Storage backend (embedded DB). Required in recent Conduit versions.
+database_backend = "rocksdb"
+
+# Where Conduit stores all persistent state (signing keys, rooms, media, etc.).
+# This path is inside the container and is mapped to the conduit_data volume.
+database_path = "/var/lib/conduit"
+
+# Listener (Caddy reverse-proxies to this)
+address = "0.0.0.0"
+port = 8008
+
+# Federation
+allow_federation = true
+
+# Registration / onboarding
+allow_registration = false
+# For token-gated registration during bootstrap:
+# allow_registration = true
+# registration_token = "${CONDUIT_REGISTRATION_TOKEN}"
+
+# Recommended: cap request sizes to reduce abuse (tune as needed)
+max_request_size = 20_000_000
+
+# Optional: log level
+# log = "warn"

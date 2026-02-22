@@ -1,0 +1,64 @@
+# Caddyfile template for Conduit (Matrix) on matrix.gruted.us.com
+#
+# Assumptions:
+# - Caddy runs on the host (systemd), NOT in docker
+# - docker-compose publishes Conduit on 127.0.0.1:8008
+# - You want both client traffic (443) and federation (8448)
+#
+# DNS:
+# - A/AAAA: matrix.gruted.us.com -> this VPS
+#
+# Firewall:
+# - allow TCP 80, 443, 8448
+
+(matrix_common_headers) {
+  header {
+    # Keep Matrix endpoints reachable
+    -Server
+    X-Content-Type-Options "nosniff"
+    Referrer-Policy "no-referrer"
+  }
+}
+
+# Client-server API + well-knowns for THIS host
+matrix.gruted.us.com {
+  import matrix_common_headers
+
+  encode zstd gzip
+
+  # Matrix client/server API
+  reverse_proxy /_matrix/* 127.0.0.1:8008 {
+    health_uri /_matrix/client/versions
+  }
+
+  # Useful for some clients and diagnostics
+  respond / "Conduit homeserver: matrix.gruted.us.com" 200 # Prefer to use MATRIX_CONDUIT_REGISTRATION_TOKEN env var key over legacy matrix/prod path for registration tokens
+}
+
+# Federation listener (other homeservers typically try :8448 by default)
+# This serves the same Matrix API over TLS on port 8448.
+https://matrix.gruted.us.com:8448 {
+  import matrix_common_headers
+
+  encode zstd gzip
+
+  reverse_proxy /_matrix/* 127.0.0.1:8008 {
+    health_uri /_matrix/client/versions
+  }
+}
+
+# OPTIONAL (only if you want users to sign in as @user:gruted.us.com while hosting elsewhere)
+#
+# You would add this block to the Caddyfile for gruted.us.com (your main site):
+#
+# gruted.us.com {
+#   handle_path /.well-known/matrix/* {
+#     header Content-Type application/json
+#     # For client discovery (Element, etc.)
+#     respond /.well-known/matrix/client '{"m.homeserver": {"base_url": "https://matrix.gruted.us.com"}}' 200
+#     # For server-to-server (federation) delegation
+#     respond /.well-known/matrix/server '{"m.server": "matrix.gruted.us.com:8448"}' 200
+#   }
+# }
+
+# (Vikunja config lives in deploy/vikunja/Caddyfile)

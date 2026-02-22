@@ -1,0 +1,60 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: vikunja-db
+    restart: unless-stopped
+    env_file:
+      - ${VIKUNJA_RUNTIME_ENV_FILE}
+    environment:
+      POSTGRES_DB: vikunja
+      POSTGRES_USER: vikunja
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - vikunja
+
+  vikunja:
+    image: vikunja/vikunja:latest
+    container_name: vikunja
+    restart: unless-stopped
+    user: "0:0"
+    depends_on:
+      - db
+    env_file:
+      - ${VIKUNJA_RUNTIME_ENV_FILE}
+    environment:
+      # Non-secret defaults (can be overridden in the runtime env file)
+      VIKUNJA_DATABASE_TYPE: postgres
+      VIKUNJA_DATABASE_HOST: db
+      VIKUNJA_DATABASE_PORT: 5432
+      VIKUNJA_DATABASE_USER: vikunja
+      VIKUNJA_DATABASE_DATABASE: vikunja
+      VIKUNJA_SERVICE_TIMEZONE: UTC
+      # Ensure writable cache/home inside the container
+      HOME: /tmp
+      XDG_CACHE_HOME: /tmp/.cache
+      # Public URL (required for correct links / frontend config)
+      VIKUNJA_SERVICE_PUBLICURL: https://tasks.gruted.us.com/
+      VIKUNJA_SERVICE_ENABLEREGISTRATION: "false"
+    # Expose the app only on loopback; host Caddy terminates TLS and proxies to this.
+    ports:
+      - "127.0.0.1:3456:3456"
+    volumes:
+      - files:/app/vikunja/files
+    networks:
+      - vikunja
+
+  # NOTE: We no longer run a dedicated Caddy container for Vikunja.
+  # A single host-level Caddy instance serves both:
+  # - matrix.gruted.us.com (Conduit)
+  # - tasks.gruted.us.com (Vikunja)
+  #
+  # Remove/keep this service disabled to avoid port conflicts on 80/443.
+
+networks:
+  vikunja:
+    name: vikunja
+
+volumes:
+  db-data:
+  files:

@@ -1,0 +1,1 @@
+## Update 2026-02-20: Deprecated Repos Removed\n\nsubstack-api, substack-api2, tuta2imap: Deprecated per user instruction. `rm -rf` executed successfully.\n\n(See prior scan/push summary above.)

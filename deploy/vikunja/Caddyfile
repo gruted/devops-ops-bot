@@ -1,0 +1,22 @@
+{
+	# Optional: set globally via env if you want
+	# email {$ACME_EMAIL}
+}
+
+(tasks_common) {
+	encode zstd gzip
+	# Security headers (tune as needed)
+	header {
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+}
+
+tasks.gruted.us.com {
+	import tasks_common
+
+	# Vikunja now serves the frontend from the same container as the API.
+	reverse_proxy vikunja:3456
+}

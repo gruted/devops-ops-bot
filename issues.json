@@ -1,0 +1,17 @@
+[
+  {
+    "title": "Initial import: review scripts and runbooks",
+    "body": "Inspect the copied scripts/ and deploy/ folders, verify they run locally, and document any environment variables or credentials needed.\n\nAcceptance criteria:\n- Scripts run in a dev container or local shell\n- README updated with run instructions\n- Any secrets are noted and not committed",
+    "labels": ["import", "triage", "docs"]
+  },
+  {
+    "title": "Add tests and linting for automation scripts",
+    "body": "Create lightweight tests (shellcheck, unit tests where applicable) and add linting to the CI workflow.\n\nAcceptance criteria:\n- shellcheck or equivalent added\n- CI job runs lint and tests\n- Documentation on how to run locally",
+    "labels": ["task", "ci"]
+  },
+  {
+    "title": "Create container image and publish dev tag",
+    "body": "Add Dockerfile and build/push workflow for a dev image tag. Ensure entrypoint.sh is used and documentation explains how to run the container locally.",
+    "labels": ["infra", "enhancement"]
+  }
+]

@@ -1,0 +1,27 @@
+services:
+  conduit:
+    image: matrixconduit/matrix-conduit:latest
+    # If this image/tag ever changes, check https://conduit.rs / the Conduit docs.
+    container_name: conduit
+    restart: unless-stopped
+    environment:
+      # Conduit reads its config from a TOML file.
+      - CONDUIT_CONFIG=/etc/conduit/conduit.toml
+      - TZ=UTC
+      - MATRIX_CONDUIT_REGISTRATION_TOKEN=${MATRIX_CONDUIT_REGISTRATION_TOKEN}
+      - MATRIX_BOT_PASSWORD=${MATRIX_BOT_PASSWORD}
+      - MATRIX_BOT_DEVICE_ID=${MATRIX_BOT_DEVICE_ID}
+    volumes:
+      # Rendered config (contains secrets). Generate with ~/.local/bin/matrix-secrets-env
+      - ${CONDUIT_RENDERED_TOML:?set CONDUIT_RENDERED_TOML}:/etc/conduit/conduit.toml:ro
+
+      # Persistent data (includes signing keys + media + state). Back this up.
+      - conduit_data:/var/lib/conduit
+
+    # Expose only to localhost; host Caddy terminates TLS and proxies.
+    ports:
+      - "127.0.0.1:8008:8008"
+
+volumes:
+  conduit_data:
+    name: conduit_data

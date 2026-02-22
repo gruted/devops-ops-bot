@@ -1,0 +1,11 @@
+{
+  "homeserver": "https://matrix.gruted.us.com",
+  "effort": "Model Review",
+  "ted": "@ted:matrix.gruted.us.com",
+  "spaceId": "!W81Vc9nF_3SWQOT4USmCodmPKH06gZ45pa6wTFWtGyI",
+  "rooms": {
+    "announcements": "!7Uh8rVGKkOXYhlybW2RSBBCDrWOqV0-vDrVgMjRJKhs",
+    "workshop": "!v-32JrQXITXYGAlgFjnSFEUSOrAVMNmBE66XHbgcgU0",
+    "alerts": "!pgY0wCaWlq8B1MNqBF9-HJ7bVGjdw35noF1EenlLBkI"
+  }
+}
