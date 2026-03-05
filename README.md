@@ -118,3 +118,16 @@ Requirements: `docker` (optional; falls back if unavailable), `systemctl`, `open
 ./scripts/gh_bug_report.sh > notes/gh-bugs.md
 ```
 Requirements: authenticated `gh` CLI (uses existing login), `jq`.
+
+## Container image
+
+A `Dockerfile` is provided plus a GitHub workflow that publishes `ghcr.io/gruted/devops-ops-bot:dev`.
+
+Run locally:
+
+```bash
+docker build -t devops-watch:dev .
+docker run --rm devops-watch:dev check --warn-mem 95 --crit-mem 99
+```
+
+The entrypoint defaults to `check`, so additional arguments map to the CLI flags.
