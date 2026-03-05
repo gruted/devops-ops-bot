@@ -103,3 +103,18 @@ shellcheck scripts/*.sh
 # CI
 
 GitHub Actions (`.github/workflows/ci.yml`) runs both the Node check and shellcheck linting on every push/PR.
+
+## Ops scripts
+
+### Weekly audit
+```
+./scripts/weekly_audit.sh              # prints markdown
+./scripts/weekly_audit.sh --out notes/audit-weekly.md
+```
+Requirements: `docker` (optional; falls back if unavailable), `systemctl`, `openclaw nodes status` for paired-node info.
+
+### GitHub bug report
+```
+./scripts/gh_bug_report.sh > notes/gh-bugs.md
+```
+Requirements: authenticated `gh` CLI (uses existing login), `jq`.
