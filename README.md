@@ -85,3 +85,21 @@ Example output can be pasted into `crontab -e`.
 ## License
 
 MIT (suggested; change as needed)
+
+## Tests & linting
+
+Run the Node check locally (same as CI):
+
+```bash
+npm run check
+```
+
+Lint the shell scripts (requires `shellcheck`):
+
+```bash
+shellcheck scripts/*.sh
+```
+
+# CI
+
+GitHub Actions (`.github/workflows/ci.yml`) runs both the Node check and shellcheck linting on every push/PR.

@@ -11,8 +11,9 @@
     "devops-watch": "bin/devops-watch.js"
   },
   "scripts": {
-    "check": "node bin/devops-watch.js check",
-    "cron-example": "node bin/devops-watch.js cron-example"
+    "check": "node bin/devops-watch.js check --warn-cpu 95 --crit-cpu 99 --warn-mem 95 --crit-mem 99 --warn-disk 95 --crit-disk 99 --disk-mount / --min-uptime-min 1",
+    "cron-example": "node bin/devops-watch.js cron-example",
+    "test": "npm run check"
   },
   "repository": {
     "type": "git",
