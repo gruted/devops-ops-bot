@@ -1,133 +1,147 @@
-# devops-ops-bot (MVP)
+# devops-ops-bot
 
-A tiny DevOps “ops bot” prototype: collect basic host health signals (CPU/mem/disk/uptime), evaluate thresholds, and optionally alert + run a restart command.
+Lightweight server health monitoring with alerts and auto-recovery. One command, zero config to start.
 
-This repo ships a Node.js CLI:
+## What you get
 
-- `devops-watch check` – one-shot health check (good for cron/CI)
-- `devops-watch cron-example` – prints an example crontab line
+- **CPU / Memory / Disk / Uptime** checks with configurable thresholds
+- **Slack or Discord alerts** via webhooks
+- **Auto-restart** commands on critical conditions
+- **JSON output** for piping into dashboards or log aggregators
+- **Docker image** for containerized deployments
+- **Cron-ready** — runs as a one-shot check, exits with status codes
 
-## MVP goals
+## Quick start
 
-- **Signal**: CPU load %, memory used %, disk used % (mount), uptime minutes
-- **Decision**: status = `ok|warn|crit` from thresholds
-- **Alert**: optional Slack/Discord-compatible webhook
-- **Auto-recovery**: optional `--restart-cmd` on `crit` (or `warn`)
-
-## Install (local)
+### Option 1: npx (no install)
 
 ```bash
-cd devops-ops-bot
-npm i
-npm link   # installs devops-watch into your PATH
+npx @gruted/devops-ops-bot check
+```
+
+### Option 2: npm install
+
+```bash
+npm install -g @gruted/devops-ops-bot
+devops-watch check
+```
+
+### Option 3: Docker
+
+```bash
+docker run --rm ghcr.io/gruted/devops-ops-bot:latest check
+```
+
+### Option 4: One-liner install script
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/gruted/devops-ops-bot/main/install.sh | bash
 ```
 
 ## Usage
 
-### One-shot check
+### Basic health check
 
 ```bash
 devops-watch check
+# [OK] myhost cpu=12.3%(ok) mem=65.2%(ok) disk(/)=45.1%(ok) uptime=1440m(ok)
+```
 
+Exit codes: `0` = ok, `1` = warn, `2` = crit
+
+### Custom thresholds
+
+```bash
 devops-watch check \
-  --warn-cpu 85 --crit-cpu 95 \
-  --warn-mem 85 --crit-mem 95 \
-  --warn-disk 85 --crit-disk 95 \
+  --warn-cpu 80 --crit-cpu 95 \
+  --warn-mem 80 --crit-mem 95 \
+  --warn-disk 80 --crit-disk 95 \
   --disk-mount / \
   --min-uptime-min 5
 ```
 
-Exit codes:
-
-- `0` = ok
-- `1` = warn
-- `2` = crit
-
-### Webhook alert
+### JSON output
 
 ```bash
-export WEBHOOK="https://hooks.slack.com/services/..."  # or Discord webhook
-
-devops-watch check --webhook-url "$WEBHOOK"
+devops-watch check --json
 ```
+
+Returns full metrics object with hostname, platform, per-metric levels, and thresholds — ready for log ingestion or dashboards.
+
+### Webhook alerts (Slack / Discord)
+
+```bash
+devops-watch check --webhook-url "https://hooks.slack.com/services/T.../B.../xxx"
+```
+
+Works with both Slack (`{text}`) and Discord (`{content}`) webhook formats.
 
 ### Auto-restart on critical
 
 ```bash
 devops-watch check \
   --webhook-url "$WEBHOOK" \
-  --restart-cmd "systemctl restart nginx" \
-  --restart-on crit
+  --restart-cmd "systemctl restart nginx"
 ```
 
-### Cron integration
+Runs the restart command when status is `crit`. Combine with cron for self-healing infrastructure.
+
+### Cron setup
+
+```bash
+# Check every 5 minutes, alert to Slack
+*/5 * * * * devops-watch check --webhook-url "$WEBHOOK" >> /var/log/devops-watch.log 2>&1
+```
+
+Or generate a cron line:
 
 ```bash
 devops-watch cron-example --every-min 5
 ```
 
-Example output can be pasted into `crontab -e`.
+## Pricing
 
-## Notes / limitations
+| Plan | Price | What's included |
+|------|-------|----------------|
+| **Ops Basic** | $10/mo per node | Health checks, alerts, cron setup support |
+| **Ops Bundle** | $49/mo up to 10 nodes | Everything in Basic + auto-restart, priority support, onboarding call |
 
-- Uses `systeminformation` for cross-platform metrics.
-- Disk check picks the requested mount if present; otherwise first filesystem entry.
-- Webhook payload is intentionally simple: sends both `{text}` (Slack) and `{content}` (Discord).
+→ [Get Ops Basic](https://buy.stripe.com/7sY28rg6e4sc2V91hMew800)
+→ [Get Ops Bundle](https://buy.stripe.com/14AfZh6vEaQA0N1e4yew801)
 
-## Roadmap ideas
+## Configuration reference
 
-- Service/process health (systemd, pm2, docker containers)
-- Node status aggregation (OpenClaw nodes: paired device heartbeats)
-- Alert routing: email/SMS/PagerDuty
-- “runbook links” per alert type
-- Daemon mode + rate limiting + deduplication
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--warn-cpu <pct>` | 85 | Warn threshold for CPU load % |
+| `--crit-cpu <pct>` | 95 | Critical threshold for CPU load % |
+| `--warn-mem <pct>` | 85 | Warn threshold for memory used % |
+| `--crit-mem <pct>` | 95 | Critical threshold for memory used % |
+| `--warn-disk <pct>` | 85 | Warn threshold for disk used % |
+| `--crit-disk <pct>` | 95 | Critical threshold for disk used % |
+| `--disk-mount <path>` | `/` | Filesystem mount to check |
+| `--min-uptime-min <n>` | 5 | Alert if uptime below this (minutes) |
+| `--webhook-url <url>` | — | Slack/Discord webhook URL |
+| `--restart-cmd <cmd>` | — | Shell command to run on critical |
+| `--json` | false | Output full JSON metrics |
+
+## Docker
+
+```bash
+# Build locally
+docker build -t devops-watch .
+
+# Run with custom thresholds
+docker run --rm devops-watch check --warn-mem 80 --crit-mem 95
+
+# Published image
+docker run --rm ghcr.io/gruted/devops-ops-bot:latest check
+```
+
+## CI / GitHub Actions
+
+The repo includes `.github/workflows/ci.yml` which runs health checks and linting on every push/PR.
 
 ## License
 
-MIT (suggested; change as needed)
-
-## Tests & linting
-
-Run the Node check locally (same as CI):
-
-```bash
-npm run check
-```
-
-Lint the shell scripts (requires `shellcheck`):
-
-```bash
-shellcheck scripts/*.sh
-```
-
-# CI
-
-GitHub Actions (`.github/workflows/ci.yml`) runs both the Node check and shellcheck linting on every push/PR.
-
-## Ops scripts
-
-### Weekly audit
-```
-./scripts/weekly_audit.sh              # prints markdown
-./scripts/weekly_audit.sh --out notes/audit-weekly.md
-```
-Requirements: `docker` (optional; falls back if unavailable), `systemctl`, `openclaw nodes status` for paired-node info.
-
-### GitHub bug report
-```
-./scripts/gh_bug_report.sh > notes/gh-bugs.md
-```
-Requirements: authenticated `gh` CLI (uses existing login), `jq`.
-
-## Container image
-
-A `Dockerfile` is provided plus a GitHub workflow that publishes `ghcr.io/gruted/devops-ops-bot:dev`.
-
-Run locally:
-
-```bash
-docker build -t devops-watch:dev .
-docker run --rm devops-watch:dev check --warn-mem 95 --crit-mem 99
-```
-
-The entrypoint defaults to `check`, so additional arguments map to the CLI flags.
+MIT

@@ -1,7 +1,7 @@
 {
-  "name": "devops-ops-bot",
+  "name": "@gruted/devops-ops-bot",
   "version": "1.0.0",
-  "description": "",
+  "description": "Lightweight server health monitoring with alerts and auto-recovery",
   "main": "index.js",
   "directories": {
     "doc": "docs",
@@ -19,9 +19,16 @@
     "type": "git",
     "url": "git+https://github.com/gruted/devops-ops-bot.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "devops",
+    "monitoring",
+    "health-check",
+    "alerting",
+    "server",
+    "ops"
+  ],
+  "author": "gruted",
+  "license": "MIT",
   "type": "commonjs",
   "bugs": {
     "url": "https://github.com/gruted/devops-ops-bot/issues"
@@ -30,5 +37,14 @@
   "dependencies": {
     "commander": "^14.0.3",
     "systeminformation": "^5.31.1"
-  }
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "docs/",
+    "scripts/",
+    "README.md",
+    "LICENSE",
+    "docker-entrypoint.sh"
+  ]
 }
