@@ -1,5 +1,9 @@
 # devops-ops-bot
 
+[![ClawHub](https://img.shields.io/badge/ClawHub-devops--ops--bot-blue)](https://clawhub.com/skills/devops-ops-bot)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![GitHub](https://img.shields.io/github/stars/gruted/devops-ops-bot?style=social)](https://github.com/gruted/devops-ops-bot)
+
 Lightweight server health monitoring with alerts and auto-recovery. One command, zero config to start.
 
 ## What you get
